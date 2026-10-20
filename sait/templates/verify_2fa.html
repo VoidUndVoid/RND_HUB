@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="auth-box">
+        <h2>Подтверждение 2FA</h2>
+        <p style="margin-bottom: 15px; color: #aaa;">Введите 6-значный код, отправленный на вашу почту (или в консоль сервера).</p>
+        <form action="{{ url_for('verify_2fa') }}" method="POST">
+            <div class="form-group">
+                <label>Код подтверждения:</label>
+                <input type="text" name="code" required maxlength="6" style="text-align: center; font-size: 20px; letter-spacing: 4px;">
+            </div>
+            <button type="submit" class="btn-submit">Подтвердить вход</button>
+        </form>
+    </div>
+{% endblock %}

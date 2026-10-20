@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="feed">
+        {% for post in posts %}
+            <div class="post-card">
+                <div class="post-header">
+                    <a href="{{ url_for('user_profile', username=post.username) }}">{{ post.nickname }} (@{{ post.username }})</a>
+                    <span>{{ post.created_at }}</span>
+                </div>
+                <div class="post-content">
+                    {{ post.content }}
+                </div>
+            </div>
+        {% else %}
+            <p style="text-align: center; color: #888;">Постов пока нет.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Плавающее поле создания поста (по макету внизу) -->
+    {% if session.get('user_id') %}
+        <form class="create-post-floating" action="{{ url_for('create_post') }}" method="POST">
+            <input type="text" name="content" placeholder="..." required autocomplete="off">
+            <button type="submit">😃</button>
+        </form>
+    {% endif %}
+{% endblock %}

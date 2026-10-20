@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="auth-box" style="max-width: 100%;">
+        <h2>Профиль: {{ user.nickname }}</h2>
+        <p><strong>Юзернейм:</strong> @{{ user.username }}</p>
+        {% if user.email %}
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        {% endif %}
+    </div>
+
+    <h3 style="margin: 20px 0 10px;">Публикации пользователя:</h3>
+    <div class="feed">
+        {% for post in posts %}
+            <div class="post-card">
+                <div class="post-header">
+                    <span>{{ post.created_at }}</span>
+                </div>
+                <div class="post-content">
+                    {{ post.content }}
+                </div>
+            </div>
+        {% else %}
+            <p style="color: #888;">У этого пользователя ещё нет постов.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

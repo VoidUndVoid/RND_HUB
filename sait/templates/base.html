@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RND HUB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="{{ url_for('index') }}" class="logo">RND HUB</a>
+        
+        <div class="nav-controls">
+            {% if not session.get('user_id') %}
+                <a href="{{ url_for('login') }}" class="btn-auth">Авторизация</a>
+            {% endif %}
+
+            <!-- Кнопка фильтров (ползунки) -->
+            <button class="btn-icon" onclick="toggleMenu('filter-menu')">🎛</button>
+            <div id="filter-menu" class="dropdown-menu">
+                <form action="{{ url_for('index') }}" method="GET">
+                    <div class="form-group">
+                        <label>Временной промежуток:</label>
+                        <select name="sort" style="width: 100%; padding: 5px; background: #2b2b2b; color: white; border: 1px solid #5a5a5a; border-radius: 4px;">
+                            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Сначала новые</option>
+                            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Сначала старые</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ник пользователя:</label>
+                        <input type="text" name="username" value="{{ filter_user or '' }}" placeholder="@username">
+                    </div>
+                    <button type="submit" class="btn-submit" style="padding: 6px;">Применить</button>
+                </form>
+            </div>
+
+            <!-- Меню-гамбургер -->
+            <button class="btn-icon" onclick="toggleMenu('user-menu')">☰</button>
+            <div id="user-menu" class="dropdown-menu">
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('profile') }}">профиль</a>
+                    <a href="#">настройки</a>
+                    <a href="{{ url_for('user_profile', username=session.get('username')) }}">мои посты</a>
+                    <a href="{{ url_for('logout') }}">выход</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">войти</a>
+                    <a href="{{ url_for('register') }}">регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
+            const allMenus = document.querySelectorAll('.dropdown-menu');
+            allMenus.forEach(m => {
+                if (m.id !== id) m.classList.remove('active');
+            });
+            menu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
